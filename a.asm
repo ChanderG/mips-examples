@@ -3,11 +3,13 @@
 # leaving the result in register $t0.
 # Registers used:
 # t0 - used to hold the input
-# t1 - used to hold the constant 1.
+# t1 - used to hold the result 
+# t2 - used to hold the constant 10
+# t3 - used to hold the partially calculated one
 # v0- syscall parameter.
  
   .data
-output1: .asciiz "The sum of "
+output1: .asciiz "The sum of the digits of the read number "
 output2: .asciiz " is "
 output3: .asciiz ".\n"
 
@@ -25,19 +27,23 @@ main:
 			move $t0, $v0
 
       #calculate and store result in $t1
-      li $t1, -1 
-
+      li $t1, 0  
       li $t2, 10 
-			divu $t0, $t2 
+      move $t3, $t0 
+
+compare:
+      beq $t3, $zero, equal 
+
+			divu $t3, $t2 
 
 			mfhi $a0
-			li $v0, 1
-			syscall
+			add $t1, $t1, $a0
 			
 			mflo $a0
-			li $v0, 1
-			syscall
+      move $t3, $a0
 
+      b compare
+equal:
       # print result
 
       la $a0,output1
