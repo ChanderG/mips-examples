@@ -1,5 +1,5 @@
 # Chander G - 26/07/14 
-# b.asm-- Question 2 
+# b.asm-- Take an input and return sum of digits in the string 
 # Registers used:
 # t0 - used to hold the input
 # t1 - used to store the result
@@ -9,65 +9,85 @@
 # v0- syscall parameter.
  
   .data
+input: .asciiz "Enter the input string: "
 output1: .asciiz "The sum of the digits of the read input "
 output2: .asciiz " is "
 output3: .asciiz ".\n"
 
-string_space : .space 1024
+string_space : .space 104
 
-	.text
+  .text
 
-main:  
-
-      # read in input to reg $t0
-      la $a0, string_space           # location where input will be stored 
-      li $a1, 1024                   # max size of input
-			li $v0, 8                      # syscall code for reading string
+main: # Prompt for an input   
+      la $a0,input		# copy input prompt string location to a0  
+      li $v0, 4   		# load immediate v0 with int const 4
+      		     		# 4 - function code for printing strings 
       syscall
 
-      #calculate and store result in $t1
-      li $t1, 0
-			la $t2, string_space
-			b start_loop 
-start_loop:
-      lb $t3, ($t2)
-      beq $t3, 10, end_loop   # using \n to end string
-			
-      # Do the computation here
-			# $t3 holds the current letter
-      
-			bgt $t3, 57, done
-			blt $t3, 48, done
+      # read in input to space string_space of max size 104
+      # syscall code for reading string -- 8
 
-			sub $t4, $t3, 48 
-			addu $t1, $t1, $t4
+      la $a0, string_space           
+      li $a1, 104                  
+      li $v0, 8                    
+      syscall
+
+      # init code
+      # t2 holds pointer to string: initially at start of string 
+      li $t1, 0
+      la $t2, string_space
+
+      # start of loop 
+start_loop:
+
+      # load byte at location stored in t2 into t3  
+      lb $t3, ($t2)
+
+      # loop until end of string
+      # 10 stands for \n    
+      beq $t3, 10, end_loop   
+      
+      # $t3 holds the current letter
+      # if t3 < 0 or > 9 go to done 
+      # 48 stands for 0
+      # 57 stands for 9        
+ 
+      bgt $t3, 57, done
+      blt $t3, 48, done
+
+      # get the integer and add it to the result  
+      sub $t4, $t3, 48 
+      addu $t1, $t1, $t4
 
 done:
+
+      # increment loop counter
       addu $t2, $t2, 1
-			b start_loop
-			
-			# print result
+      b start_loop
+
 end_loop:
+
+      # print result
 
       la $a0,output1
       li $v0, 4
-			syscall
+      syscall
 
-	    la $a0,string_space
+      la $a0,string_space
       li $v0, 4
-			syscall
+      syscall
 
       la $a0,output2
       li $v0, 4
-			syscall
+      syscall
 
-			move $a0, $t1
-			li $v0, 1
-			syscall
+      move $a0, $t1
+      li $v0, 1
+      syscall
 
       la $a0,output3
       li $v0, 4
-			syscall
+      syscall
 
-			jr $ra               # needed to finish smoothly
+      jr $ra               # needed to finish smoothly
 # end of add.asm
