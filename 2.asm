@@ -30,8 +30,10 @@ loop:
 
       # if a number is entered, find gcd of it and the previous number 
 			# a0-3 are used for passing function parameters
-			move $t1, $a1
-      move $t0, $a0
+			#move $t1, $a1
+      #move $t0, $a0
+			move  $a1 ,$t1
+			move  $a0 ,$t0
 
       jal gcd
 
@@ -56,8 +58,25 @@ end:
       li	$v0, 10		# system call code for exit = 10
 			syscall				# call operating sys
 
-gcd:  			
-      li $t1, 1
-			move $v0, $t1 
+gcd:  # standard algo for gcd -- result is stored in v0
 
+      bgt $a0, $a1, gt
+      beq $a0, $a1, eq
+     
+		  # if a0 < a1 
+			sub $a1, $a1, $a0
+			jal gcd
+      b done
+
+gt:   # if a0 > a1 
+			sub $a0, $a0, $a1
+      jal gcd
+      b done 
+
+eq:   # if a0 == a1 
+      # move $v0, $a0 
+      li $v0, 7 
+      b done
+
+done:
       jr $ra
