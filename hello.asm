@@ -5,19 +5,29 @@
 input: .asciiz "Enter the number: " 
 
   .text
-main: 
+
+main: #li $t0, 7 
+      # addi $sp, $sp, -4
+      # sw $t0, ($sp) 
+	    
       # get input
       jal inp       # jump and link
 
       # print the result
-      move $a0, $t0
+      lw $t1, ($sp) 
+
+      move $a0, $t1
       li $v0, 1    	
       syscall
 
       li	$v0, 10		# system call code for exit = 10
 			syscall				# call operating sys
 
-inp:
+inp:  #lw $t1, ($sp)
+      #move $a0, $t1
+      #li $v0, 1    	
+      #syscall
+
       la $a0,input
       li $v0, 4	
       syscall		
@@ -26,5 +36,8 @@ inp:
       li $v0, 5
       syscall                   
       move $t0, $v0     
+
+      addi $sp, $sp, -4
+      sw $t0, ($sp) 
 
       jr $ra     # jump and return to the return address 
