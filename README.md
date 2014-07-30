@@ -3,8 +3,8 @@
 ###What?
 Some MIPS programs
 
-1. a.asm => First question
-
+* a.asm => First question
+* 1.asm => Fibonacci using recursion: works for n < 47
 
 ###Build Instructions
 
