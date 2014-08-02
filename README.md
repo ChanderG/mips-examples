@@ -1,10 +1,9 @@
 #MIPS-examples
 
 ###What?
-Some MIPS programs
+Some MIPS programs.Disclaimer:  There are not very organized.They will work but are very random in terms of names of registers etc.
 
-* a.asm => First question
-* 1.asm => Fibonacci using recursion: works for n < 47
+The file q.md contains the exact questions.
 
 ###Build Instructions
 
