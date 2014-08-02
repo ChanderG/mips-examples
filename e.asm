@@ -24,41 +24,66 @@ main: # prompt user input
       li $v0, 5           
       syscall
 
-      # push digit onto the stack 
+
+      # push input onto the stack 
       addi $sp, $sp, -4  # Decrement stack pointer by 4
       sw   $v0, 0($sp)   # Save input to stack
 
-      #Check for perfect number property
+
       li $t0, 1    # loop counter in register
- 	
-	    li $t1, 0    # one off initial value of sum
-      # calculated sum on the stack
-      addi $sp, $sp, -4  # Decrement stack pointer by 4
-      sw   $t1, 0($sp)   # save sum on stack
+   
+      # stack pointer
+      la $t5, ($sp) 
+               
+          
+      lw $t1, 0($sp)
 
 start:
       # Check if t0 is a factor 
-			lw $t1, 4($sp)
 
-		  beq $t0, $t1, done
+      beq $t0, $t1, done
 
       divu $t1, $t0
 
-			mfhi $t2
-			bne $t2, $zero, con
+      mfhi $t2
+      bne $t2, $zero, con
 
-      lw $t3, ($sp)
-			add $t4, $t3, $t0
-			sw $t4, 0($sp)
+      # adding currently found factor to sum variable on stack
+      #lw $t3, ($sp)
+      #add $t4, $t3, $t0
+      #sw $t4, 0($sp)
+
+      # here push factor itself on stack
+      addi $sp, $sp, -4  # Decrement stack pointer by 4
+     
+      move $t7, $t0 
+
+      sw   $t7, 0($sp)   # save sum on stack
+          
 
 con:
-			addi $t0, $t0, 1
+      li $v0, 1
+      add $t0, $t0, $v0 
+
 
       b start
 done:
+      # t1 stores sum - init 0 
+      li $t1, 0 
+
+find_sum:
+      beq $sp, $t5, sum_found  
+      
+      lw   $t3, 0($sp)   
+      addi $sp, $sp, 4  # Decrement stack pointer by 4
+     
+      add $t1, $t1, $t3 
+    
+      b find_sum   
+sum_found:
+
       # compare for equality 
-			lw $t1, 4($sp)
-			lw $t2, 0($sp)
+      lw $t2, 0($sp)
 
       beq $t1, $t2, p
 
@@ -66,7 +91,7 @@ done:
       la $a0,output2
       li $v0, 4
       syscall
-			b end
+      b end
 
 p: 
       # print perfect

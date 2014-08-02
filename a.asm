@@ -14,6 +14,7 @@ output2: .asciiz " is "
 output3: .asciiz ".\n"
 
   .text
+
 main: # read the input 
       la $a0,input              # copy input string location to a0  
       li $v0, 4			# load immediate v0 with int const 4

@@ -15,14 +15,14 @@ newline: .asciiz "\n"
 main: 
       # prompt for input
       la $a0,input
-      li $v0, 4	
-      syscall		
+      li $v0, 4  
+      syscall    
 
       # gcd in t1 , init w/ 1, integer const -1
       li $t1, 1
-			li $t2, -1
+      li $t2, -1
 
-			li $t3, 1
+      li $t3, 1
 
 loop:
       # input in t0
@@ -33,54 +33,54 @@ loop:
       beq $t0, $t2, end
 
       # if a number is entered, find gcd of it and the previous number 
-			# a0-3 are used for passing function parameters
+      # a0-3 are used for passing function parameters
       beqz $t3, ever
       
-			move $t1, $t0 
-			li $t3, 0 
-			
+      move $t1, $t0 
+      li $t3, 0 
+      
 ever:
-			move  $a1 ,$t1
-			move  $a0 ,$t0
+      move  $a1 ,$t1
+      move  $a0 ,$t0
 
       jal gcd
 
-			# v0-1 are used to return from function
+      # v0-1 are used to return from function
       move $t1, $v0
 
       move $a0, $t1
-      li $v0, 1    	
+      li $v0, 1      
       syscall
 
       la $a0,newline
-      li $v0, 4	
-      syscall		
+      li $v0, 4  
+      syscall    
 
       b loop
 end:
-      li	$v0, 10		# system call code for exit = 10
-			syscall				# call operating sys
+      li  $v0, 10    # system call code for exit = 10
+      syscall        # call operating sys
 
 
 
 
 gcd:  # standard algo for gcd -- result is stored in v0
 
-			subu  $sp, $sp, 32  # Allocate a 32-byte stack frame
-			sw  $ra, 20($sp)  # Save Return Address
-			sw  $fp, 16($sp)  # Save old frame pointer
-			addiu   $fp, $sp, 28  # Setup new frame pointer
+      subu  $sp, $sp, 32  # Allocate a 32-byte stack frame
+      sw  $ra, 20($sp)  # Save Return Address
+      sw  $fp, 16($sp)  # Save old frame pointer
+      addiu   $fp, $sp, 28  # Setup new frame pointer
 
-			bgt $a0, $a1, gt
+      bgt $a0, $a1, gt
       beq $a0, $a1, eq
      
-		  # if a0 < a1 
-			sub $a1, $a1, $a0
-			jal gcd
+      # if a0 < a1 
+      sub $a1, $a1, $a0
+      jal gcd
       b done
 
 gt:   # if a0 > a1 
-			sub $a0, $a0, $a1
+      sub $a0, $a0, $a1
       jal gcd
       b done 
 
@@ -90,6 +90,6 @@ eq:   # if a0 == a1
       b done
 
 done: lw  $ra, 20($sp)  # Restore return address
-			lw  $fp, 16($sp)  # Restore frame pointer
-			addiu   $sp, $sp, 32  # Pop stack
-			jr $ra
+      lw  $fp, 16($sp)  # Restore frame pointer
+      addiu   $sp, $sp, 32  # Pop stack
+      jr $ra

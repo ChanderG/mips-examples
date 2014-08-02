@@ -61,7 +61,13 @@ start_loop:
 
 done:
 
-      # increment loop counter
+    $a0, string_space           
+      li $a1, 104                  
+      li $v0, 8                    
+      syscall
+
+      # init code
+      # t2 holds pointer   # increment loop counter
       addu $t2, $t2, 1
       b start_loop
 
